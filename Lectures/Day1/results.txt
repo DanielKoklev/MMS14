@@ -1,1 +1,0 @@
-Enter number 1: Enter number 2: Result = 30
