@@ -27,4 +27,4 @@ in one line : chmod usr=rwx, g=r-x, o=r--
 #2)Записват резултата във файла lineCount
 
 1 - cat source1.c source2.C
-2 - cat source1.c source2.c >> lineCount
+2 - cat source1.c source2.c > lineCount
