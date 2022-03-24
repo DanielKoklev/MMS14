@@ -1,5 +1,5 @@
 #include <stdio.h>
-// can't finish the exercise
+
 unsigned sumArrayDigits(const int* arr, size_t n){
     int sum = 0;
  
