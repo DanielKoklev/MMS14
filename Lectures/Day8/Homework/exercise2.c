@@ -40,7 +40,7 @@ int compPages(const void* a, const void* b){
 }
 
 int compAuthor(const void* a, const void* b){
-    return strcmp(((book*)b)->author, ((book*)a)->author);
+    return strcmp(((book*)a)->author, ((book*)b)->author);
 }
 
 int compPrice(const void* a, const void* b){
@@ -50,6 +50,9 @@ int compPrice(const void* a, const void* b){
         return 1;
     }
     return -1;
+}
+int compDouble(const void* a, const void* b){
+    return *(double*)b - *(double*)a;
 }
 
 void swapg(void* a, void* b, size_t size){
@@ -69,12 +72,20 @@ void bubbleSort(void* arr, size_t n, size_t size, int (*comp)(const void*,const 
     }
 }
 
-
+void *linearSearch(const void* key,void* arr, size_t n, size_t size, int (*comp)(const void*, const void*)){
+    for(int i = 0; i < n*size; i+= size){
+        if(comp((arr + i), key) == 0){
+            return arr + i;
+        }
+    }
+    return NULL;
+}
 
 
 int main(){
     srand(time(NULL));
     book books[COUNT];
+    double key = 20.50;
 
     for(int i = 0; i < COUNT; i++){
         books[i].price = randDouble(3.50, 70.40);
@@ -92,8 +103,16 @@ int main(){
 
     //bubbleSort(books, COUNT, sizeof(book), compTitle);
     //bubbleSort(books, COUNT, sizeof(book), compPages);
-    bubbleSort(books, COUNT, sizeof(book), compAuthor);
-    //bubbleSort(books, COUNT, sizeof(book), compPrice);
+    //bubbleSort(books, COUNT, sizeof(book), compAuthor);
+    bubbleSort(books, COUNT, sizeof(book), compPrice);
+
+    int *element = linearSearch(&key, books, sizeof(book), sizeof(int), compDouble);
+    if(element == NULL){
+        printf("There is no book with such price.\n");
+    }else {
+        printf("%d\n", *element);
+    }
+
     printBooks(books, COUNT);
     
 
