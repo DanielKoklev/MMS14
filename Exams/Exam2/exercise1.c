@@ -45,7 +45,7 @@ int main(){
     int n = 0;
     //scanf("Enter number between 1 and 6: %d\n", &n);
     //getComparator(n);
-
+    
     qsort(cars, cnt, sizeof(cars),compSpeedDesc);
     
 
