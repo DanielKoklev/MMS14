@@ -4,6 +4,11 @@
 #include <time.h>
 #include <math.h>
 
+/////////////////////////////////////////////
+//              UNFINISHED                 //
+/////////////////////////////////////////////
+
+
 #define COUNT 10
 #define EPS 0.001
 
@@ -14,6 +19,11 @@ typedef struct {
     double price;
 } book;
 
+typedef struct node{
+    int val;
+    struct node* next;
+}node_t;
+
 int randInt(int min, int max){
     return min + rand() % (max - min + 1);
 }
@@ -22,35 +32,10 @@ double randDouble(double min, double max){
     return min + ((double)rand() / RAND_MAX) * (max - min);
 }
 
-void printBooks(book* arr, size_t n){
-    for(int i = 0; i < n; i++){
-        printf("Title: %s, ", arr[i].title);
-        printf("Author: %s, ", arr[i].author);
-        printf("Pages: %d, ", arr[i].pages);
-        printf("Price: %.2lf\n ", arr[i].price);
-    }
-}
-
 int compTitle(const void* a, const void* b){
     return strcmp(((book*)a)->title, ((book*)b)->title);
 }
 
-int compPages(const void* a, const void* b){
-    return ((book*)a)-> pages - ((book*)b)->pages;
-}
-
-int compAuthor(const void* a, const void* b){
-    return strcmp(((book*)b)->author, ((book*)a)->author);
-}
-
-int compPrice(const void* a, const void* b){
-    if(fabs((((book*)a)->price - ((book*)b)->price)) < EPS){
-        return 0;
-    } else if(((book*)a)->price > ((book*)b)->price){
-        return 1;
-    }
-    return -1;
-}
 
 void swapg(void* a, void* b, size_t size){
     char temp[size];
@@ -69,8 +54,52 @@ void bubbleSort(void* arr, size_t n, size_t size, int (*comp)(const void*,const 
     }
 }
 
+void printLinkedList(node_t* head){
+    node_t* temp = head->next;
+    while(temp){
+        printf("%d ", temp->val);
+        temp = temp->next;
+    }
+}
 
+void add_tail(node_t* head, int val){
+    node_t* temp = head;
+    node_t* temp2 = malloc(sizeof(node_t));
 
+    temp2->val = val;
+    temp2->next = NULL;
+
+    while(temp->next){
+        temp = temp->next;
+    }
+    temp->next = temp2;
+
+}
+
+void saveList(node_t* head, char filename){
+    FILE* fp = fopen(filename, "wb");
+    node_t* temp = head->next;
+    if(fp == NULL || head == NULL){
+        printf("Failed to save items.\n");
+        return -1;
+    }
+    while(temp){
+        fwrite(&temp->val, sizeof(int), 1, fp);
+        temp = temp->next;
+    }
+    fclose(fp);
+    printf("Successfully wrote items.\n");
+}
+
+void readList(node_t* head, char filename){
+    FILE* fp = fopen(filename, "rb");
+    int val;
+    while(fread(&val, sizeof(int), 1, fp) != 0){
+        add_tail(head, val);
+    }
+    fclose(fp);
+    printf("Read all items successfully.\n");
+}
 
 int main(int argc, char **argv){
     srand(time(NULL));
@@ -91,28 +120,20 @@ int main(int argc, char **argv){
     }
 
     //bubbleSort(books, COUNT, sizeof(book), compTitle);
-    //bubbleSort(books, COUNT, sizeof(book), compPages);
-    //bubbleSort(books, COUNT, sizeof(book), compAuthor);
-    //bubbleSort(books, COUNT, sizeof(book), compPrice);
-    //printBooks(books, COUNT);
+    
 
-    FILE* fp;
-    if(argc < 2){
-        printf("You need to type the <filename> as argument |./a.out file.txt|\n");
-        exit(-1);
+    
+    if(argc < 3){
+        printf("You need to type the <input file> <output file>\n");
+        return EXIT_FAILURE;
     }
-    fp = fopen(argv[1], "wb");
-    fwrite(books, sizeof(book), COUNT, fp);
-    while(fread(&books, sizeof(book), 1, fp) != 0){
-        printf("Title is: %s\n", books->title);
-        printf("Author is: %s\n", books->author);
-        printf("Pages are: %d\n", books->pages);
-        printf("Price is: %.2lf\n", books->price);
-    }
+    char inputname[50] = argv[1];
+    char outputname[50] = argv[2];
+
     
     
     
     
-    fclose(fp);
+    
     return 0;
 }
