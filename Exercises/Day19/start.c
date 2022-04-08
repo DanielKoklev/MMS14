@@ -4,7 +4,7 @@
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-
+#include <sys/wait.h>
 int main(){
     int pid = fork();
     mkfifo("myFIFO", 00600);
@@ -27,6 +27,9 @@ int main(){
             perror("Creating writer failed.\n");
             exit(-1);
         }
+    }
+    while(wait(NULL) > 0){
+        printf("Waited for 1 process.\n");
     }
     
 
