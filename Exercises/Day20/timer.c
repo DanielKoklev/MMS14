@@ -21,7 +21,7 @@ int main(int argc, char **argv){
 
     } else if (pid == 0){
         //Child
-        int fd = open(argv[2], O_RDONLY);
+        /*int fd = open(argv[2], O_RDONLY);
 
         if(fd < 0) {perror("Could not open input file"); exit(-1);}
 
@@ -30,7 +30,7 @@ int main(int argc, char **argv){
 
         execl(argv[1], argv[1], NULL);
         perror("Exec failed.\n");
-        exit(-1);
+        exit(-1);*/
     }
     // Parent
     wait(NULL);
