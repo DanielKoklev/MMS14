@@ -92,40 +92,37 @@ int main(int argc, char **argv){
     sa.sa_handler = funcHandler;
     sigaction(SIGINT, &sa, NULL);
     int count = atoi(argv[1]);
-    while(1){
-        srand(time(NULL));
-        pthread_t th[count];
+    
+    srand(time(NULL));
+    pthread_t th[count];
 
-        sem_init(&emptyPos, 0, SIZE);
-        sem_init(&fullPos, 0, 0);
-        pthread_mutex_init(&addMux, NULL);
-
-        for(int i = 0; i < count; i++){
-            if(i == 0){
-                if(pthread_create(&th[i], NULL, producer, NULL)){
-                    perror("Error with creating the thread.\n");
-                    return EXIT_FAILURE;
-                }
-            }else {
-                if(pthread_create(&th[i], NULL, consumer, NULL)){
-                    perror("Error with creating the thread.\n");
-                    return EXIT_FAILURE;
-                }
-            }
-            
-        }
-
-        for(int i = 0; i < count; i++){
-
-            if(pthread_join(th[i],NULL)) {
-                perror("Error joining the thread.\n");
+    sem_init(&emptyPos, 0, SIZE);
+    sem_init(&fullPos, 0, 0);
+    pthread_mutex_init(&addMux, NULL);
+    for(int i = 0; i < count; i++){
+        if(i == 0){
+            if(pthread_create(&th[i], NULL, producer, NULL)){
+                perror("Error with creating the thread.\n");
                 return EXIT_FAILURE;
             }
+        }else {
+            if(pthread_create(&th[i], NULL, consumer, NULL)){
+                perror("Error with creating the thread.\n");
+                return EXIT_FAILURE;
+             }
         }
-        sem_destroy(&emptyPos);
-        sem_destroy(&fullPos);
-        pthread_mutex_destroy(&addMux);
+        
     }
+    for(int i = 0; i < count; i++){
+        if(pthread_join(th[i],NULL)) {
+            perror("Error joining the thread.\n");
+            return EXIT_FAILURE;
+        }
+    }
+    sem_destroy(&emptyPos);
+    sem_destroy(&fullPos);
+    pthread_mutex_destroy(&addMux);
+
 
     return EXIT_SUCCESS;
 }

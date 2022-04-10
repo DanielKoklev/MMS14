@@ -3,12 +3,11 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#define COUNT 10
+#define COUNT 5
 
 void* routine(void* arg){
-    printf("Hello\n");
-    sleep(2);
-    printf("Bye, bye!\n");
+    printf("Hello there!\n");
+    
 }
 
 int main(){
