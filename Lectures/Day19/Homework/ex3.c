@@ -16,10 +16,12 @@ void* printing(void* arg){
 }
 
 int main(int argc, char **argv){
+
     if(argc < 4){
         perror("You need to enter N processes, N threads and a string");
         return EXIT_FAILURE;
     }
+
     int countProc = atoi(argv[1]);
     int countThreads = atoi(argv[2]);
     char buffer[50];
@@ -28,7 +30,9 @@ int main(int argc, char **argv){
     pthread_t th[countThreads];
 
     for(int i = 0; i < countProc; i++){
+
         pid_t pid = fork();
+
         if(0 == pid){
             for(int i = 0; i < countThreads; i++){
                 if(pthread_create(&th[i], NULL, printing(buffer), NULL) != 0){
@@ -37,6 +41,7 @@ int main(int argc, char **argv){
                 }
 
             }
+            
             for(int i = 0; i < countThreads; i++){
                 if(pthread_join(th[i], NULL) != 0){
                 perror("Problem with joining threads\n");
